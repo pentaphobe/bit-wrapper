@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <cstdlib>
 
+#define max(a, b) ( a > b ? a : b )
+
 void explode(char inBuf[], unsigned int length, char outBuf[]) {
 	int out = 0;
 	for (int in=0; in < length; in++) {
@@ -36,7 +38,7 @@ void reflow(char inBuf[], char outBuf[], unsigned int length, unsigned int skip)
 
 void saveBuffer(int id, char buf[], int length) {
 	char *filename;
-	asprintf(&filename, "skip_%03d.bin", id);
+	asprintf(&filename, "data/skip_%03d.bin", id);
 	// printf("saving %s\n", filename);
 
 	FILE *fp = fopen(filename, "w");
@@ -65,7 +67,10 @@ int main(int argc, char *argv[]) {
 	// printf("read %d\n", bytesRead);
 	explode(inBuf, bytesRead, bitBuf);
 
-	for (int skips=0; skips < 400; skips++) {
+	int total = max(bytesRead / 128, 400);
+	for (int skips=0; skips < total; skips++) {
+		printf("trying variants: %3i/%3i\r", skips, total);
+		fflush(stdout);
 		reflow(bitBuf, modifiedBuf, bitSize, skips);
 		implode(modifiedBuf, bitSize, outBuf);
 		saveBuffer(skips, outBuf, bytesRead);

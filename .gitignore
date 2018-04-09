@@ -1,6 +1,8 @@
 gen_rand_buffer
 main
 random.dat
+data/*.zip
+data/*.bin
 
 # Created by https://www.gitignore.io/api/macos,windows,linux
 
